@@ -10,5 +10,17 @@ class Event extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $casts = [
+        'id' => 'string',
+        'createdAt' => 'datetime',
+        'updatedAt' => 'datetime',
+    ];
+
     public $timestamps = false;
+
+    protected $fillable = [
+        'id',
+        'name',
+        'slug',
+    ];
 }
