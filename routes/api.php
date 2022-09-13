@@ -20,9 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::group(['prefix'=>'v1/events'], function($router){
     $router->get('/', [EventController::class, 'index'])->name('events.index');
+    $router->get('/create', [EventController::class, 'create'])->name('events.create');
     $router->get('/active-events', [EventController::class, 'activeEvents'])->name('events.active-events');
     $router->get('/{id}', [EventController::class, 'show'])->name('events.show');
-    $router->post('/', [EventController::class, 'create'])->name('events.create');
+    $router->get('/{id}/edit', [EventController::class, 'edit'])->name('events.edit');
+    $router->post('/', [EventController::class, 'store'])->name('events.store');
     $router->match(['put', 'patch'], '/{id}', [EventController::class, 'update'])->name('events.update');
-    $router->delete('/{id}', [EventController::class, 'delete'])->name('evetns.destroy');
+    $router->delete('/{id}', [EventController::class, 'destroy'])->name('events.destroy');
 });
