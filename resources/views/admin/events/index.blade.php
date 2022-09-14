@@ -38,11 +38,14 @@
                             </div>
                         </form>
                     </div>
+                    @guest
+                    @else
                     <div class="col-12 text-right mt-2">
                         <div class="form-group">
                             <a class="btn btn-success text-white" href="{{ route('events.create') }}"><i class="fa fa-plus" aria-hidden="true"></i> Create</a>
                         </div>
                     </div>
+                    @endguest
                 </div>
                 @include('admin.layouts.includes.notification')
                 <div class="panel panel-default">
@@ -55,7 +58,10 @@
                                     <th>Slug</th>
                                     <th>Created At</th>
                                     <th>Updated At</th>
+                                    @guest
+                                    @else
                                     <th>Actions</th>
+                                    @endguest
                                 </tr>
                             </thead>
                             <tbody>
@@ -66,6 +72,8 @@
                                     <td>{{ $event->slug }}</td>
                                     <td>{{ date_format(date_create($event->createdAt), 'Y-m-d h:i A') }}</td>
                                     <td>{{ date_format(date_create($event->updatedAt), 'Y-m-d h:i A') }}</td>
+                                    @guest
+                                    @else
                                     <td nowrap>
                                         {{-- <a class="btn btn-primary" href="{{ route('events.show', $event) }}"><i class="fa fa-eye"></i></a> --}}
                                         <a class="btn btn-warning" href="{{ route('events.edit', $event) }}"><i class="fa fa-edit"></i></a>
@@ -77,6 +85,7 @@
                                             </form>
                                         </a>
                                     </td>
+                                    @endguest
                                 </tr>
                                 @endforeach
                             </tbody>
