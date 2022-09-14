@@ -31,11 +31,11 @@
                     <div class="col-12 text-right">
                         <div class="form-group">
                             <a class="btn btn-primary text-white" href="{{ route('events.index') }}"><i class="fa fa-list"></i> Index</a>
-                            {{-- <a class="btn btn-warning" href="{{ route('events.show', $event) }}"><i class="fa fa-eye"></i> View</a> --}}
+                            {{-- <a class="btn btn-warning" href="{{ route('events.show', $event->id) }}"><i class="fa fa-eye"></i> View</a> --}}
                         </div>
                     </div>
                     @include('admin.layouts.includes.notification')
-                    <form action="{{ route('events.update', $event) }}" enctype="multipart/form-data" method="POST">
+                    <form action="{{ route('events.update', $event->id) }}" enctype="multipart/form-data" method="POST">
                         @csrf
                         {{ method_field('PUT') }}
                         <div class="card card-primary">
@@ -62,9 +62,12 @@
                                     </div>
                                 </div>
                             </div>
+                            @guest
+                            @else
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-success float-right"><i class="fa fa-edit"></i> Update</button>
                             </div>
+                            @endguest
                         </div>
                     </form>
                 </div>

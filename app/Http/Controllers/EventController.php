@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\Event;
 use App\Http\Requests\CreateEventRequest;
 use App\Http\Controllers\Api\EventController as ApiEventController;
+use Illuminate\Support\Facades\Redis;
 use Validator;
 use Exception;
 use Session;
@@ -54,7 +55,7 @@ class EventController extends Controller
         $response = $apiController->store($request);
         $response = $response->getData();
         if ($response->meta->error == false) {
-            Session::flash('success', 'Event Created');
+            Session::flash('success', 'Event created and email has been sent.');
         } else {
             $errors = explode('|', $response->meta->message);
             foreach ($errors as $error) {
@@ -73,11 +74,18 @@ class EventController extends Controller
      */
     public function show($id)
     {
-        $event = Event::find($id);
+        $cachedEvent = Redis::get('event_' . $id);
 
-        if (!$event) {
-            Session::flash('error', 'Event not found');
-            return redirect()->route('events.index');
+        if ($cachedEvent) {
+            $event = json_decode($cachedEvent, FALSE);
+        } else {
+            $event = Event::find($id);
+
+            if (!$event) {
+                Session::flash('error', 'Event not found.');
+                return redirect()->route('events.index');
+            }
+            Redis::set('event_' . $id, $event);
         }
 
         return view('admin.events.show', compact('event'));
@@ -91,11 +99,18 @@ class EventController extends Controller
      */
     public function edit($id)
     {
-        $event = Event::find($id);
+        $cachedEvent = Redis::get('event_' . $id);
 
-        if (!$event) {
-            Session::flash('error', 'Event not found');
-            return redirect()->route('events.index');
+        if ($cachedEvent) {
+            $event = json_decode($cachedEvent, FALSE);
+        } else {
+            $event = Event::find($id);
+
+            if (!$event) {
+                Session::flash('error', 'Event not found.');
+                return redirect()->route('events.index');
+            }
+            Redis::set('event_' . $id, $event);
         }
 
         return view('admin.events.edit', compact('event'));
@@ -115,10 +130,13 @@ class EventController extends Controller
         $response = $response->getData();
 
         if ($response->meta->error == false) {
+            $event = Event::find($response->response->id);
+            Redis::set('event_' . $response->response->id, $event);
+
             if (isset($response->response->update)) {
-                Session::flash('success', 'Event Updated');
+                Session::flash('success', 'Event updated.');
             } else {
-                Session::flash('success', 'Event Created');
+                Session::flash('success', 'Event created and email has been sent.');
             }
         } else {
             $errors = explode('|', $response->meta->message);
@@ -142,8 +160,10 @@ class EventController extends Controller
 
         if ($event) {
             $event->delete();
-            Session::flash('success', 'Event Deleted');
+            Session::flash('success', 'Event deleted.');
         }
+
+        Redis::del('event_' . $id);
 
         return redirect()->route('events.index');
     }

@@ -30,15 +30,18 @@
                             <div class="col-12 text-right">
                                 <div class="form-group">
                                     <a class="btn btn-primary text-white" href="{{ route('events.index') }}"><i class="fa fa-list" aria-hidden="true"></i> Index</a>
-                                    <a class="btn btn-warning text-white" href="{{ route('events.edit', $event) }}"><i class="fa fa-edit" aria-hidden="true"></i> Edit</a>
+                                    @guest
+                                    @else
+                                    <a class="btn btn-warning text-white" href="{{ route('events.edit', $event->id) }}"><i class="fa fa-edit" aria-hidden="true"></i> Edit</a>
                                     <a class="btn btn-danger text-white delete-btn">
                                         <i class="fa fa-trash" aria-hidden="true"></i> 
-                                        <form action="{{ route('events.destroy', $event) }}" method="POST" class="d-none">
+                                        <form action="{{ route('events.destroy', $event->id) }}" method="POST" class="d-none">
                                             @csrf
                                             @method('DELETE')
                                         </form>
                                         Delete
                                     </a>
+                                    @endguest
                                 </div>
                             </div>
                         </div>

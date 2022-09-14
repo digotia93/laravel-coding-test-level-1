@@ -52,6 +52,25 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
             </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    @guest
+                    <a class="nav-link login-btn" href="#" role="button">
+                        Login <i class="fas fa-sign-in-alt"></i>
+                    </a>
+                    <form id="login-form" action="{{ route('login') }}" method="post" class="form-horizontal" role="form">
+                        {{ csrf_field() }}
+                    </form>
+                    @else
+                    <a class="nav-link logout-btn" href="#" role="button">
+                        Logout <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="post" class="form-horizontal" role="form">
+                        {{ csrf_field() }}
+                    </form>
+                    @endguest
+                </li>
+            </ul>
         </nav>
         <!-- /.navbar -->
 
@@ -64,6 +83,19 @@
 
             <!-- Sidebar -->
             <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="info">
+                        <a href="#" class="d-block">
+                            @guest
+                            Guest    
+                            @else
+                            {{ Auth::user()->username }}
+                            @endguest
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -158,6 +190,14 @@
             $(this).closest('.alert-div').fadeOut("normal", function() {
                 $(this).remove();
             });
+        });
+
+        $('.login-btn').click(function() {
+            $('#login-form').submit();
+        });
+
+        $('.logout-btn').click(function() {
+            $('#logout-form').submit();
         });
     </script>
     @yield('script')

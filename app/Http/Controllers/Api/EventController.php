@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Event;
-use Validator;
 use Exception;
 use Log;
+use Mail;
+use Validator;
 
 class EventController extends ApiController
 {
@@ -35,6 +36,8 @@ class EventController extends ApiController
                 'name' => $request->event_name,
                 'slug' => Str::slug($request->event_name),
             ]);
+
+            $this->sendEmail($event);
         } catch (Exception $exception) {
             Log::error($exception);
             return $this->respondInternalError();
@@ -95,6 +98,8 @@ class EventController extends ApiController
                 'name' => $input['event_name'],
                 'slug' => Str::slug($input['event_name']),
             ]);
+
+            $this->sendEmail($event);
         }
 
         return $this->respond($event);
@@ -109,5 +114,19 @@ class EventController extends ApiController
     public function destroy($id)
     {
         //
+    }
+
+    public function sendEmail(Event $event) {
+        // Send email function here
+        $data = array(
+            "name" => $event->name,
+            "slug" => $event->slug,
+        );
+
+        Mail::send("mail.email-template", $data , function($message) use ($data)
+        {
+            $message->to(env('MAIL_FROM_ADDRESS', 'test@gmail.com'), env('MAIL_FROM_NAME', 'Tester'))
+                    ->subject('You just created a new event | '.config('app.name'));
+        });
     }
 }
