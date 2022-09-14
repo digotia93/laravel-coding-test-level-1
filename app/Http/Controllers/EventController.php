@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Event;
 use App\Http\Requests\CreateEventRequest;
+use App\Http\Controllers\Api\EventController as ApiEventController;
 use Validator;
 use Exception;
 use Session;
@@ -49,19 +50,19 @@ class EventController extends Controller
      */
     public function store(CreateEventRequest $request)
     {
-        try {
-            $event = Event::create([
-                'id' => Str::uuid(),
-                'name' => $request->event_name,
-                'slug' => Str::slug($request->event_name),
-            ]);
-
+        $apiController = new ApiEventController();
+        $response = $apiController->store($request);
+        $response = $response->getData();
+        if ($response->meta->error == false) {
             Session::flash('success', 'Event Created');
-            return redirect()->route('events.index');
-        } catch(\Exception $e) {
-            Session::flash('error', 'Internal Error when create event');
+        } else {
+            $errors = explode('|', $response->meta->message);
+            foreach ($errors as $error) {
+                Session::flash('error', $error);
+            }
             return redirect()->back()->withInput();
         }
+        return redirect()->route('events.index');
     }
 
     /**
@@ -109,41 +110,23 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $input = $request->all();
-        $event = Event::find($id);
-        if ($event) {
-            $validator = Validator::make($input, [
-                'event_name' => "required|unique:events,name,{$id}",
-            ]);
+        $apiController = new ApiEventController();
+        $response = $apiController->update($request, $id);
+        $response = $response->getData();
 
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput();
+        if ($response->meta->error == false) {
+            if (isset($response->response->update)) {
+                Session::flash('success', 'Event Updated');
+            } else {
+                Session::flash('success', 'Event Created');
             }
-
-            $event->update([
-                'name' => $input['event_name'],
-                'slug' => Str::slug($input['event_name']),
-            ]);
-
-            Session::flash('success', 'Event Updated');
         } else {
-            $validator = Validator::make($input, [
-                'event_name' => 'required|unique:events,name',
-            ]);
-
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput();
+            $errors = explode('|', $response->meta->message);
+            foreach ($errors as $error) {
+                flash($error)->error();
             }
-
-            $event = Event::create([
-                'id' => Str::uuid(),
-                'name' => $input['event_name'],
-                'slug' => Str::slug($input['event_name']),
-            ]);
-
-            Session::flash('success', 'Event Created');
+            return redirect()->back()->withInput();
         }
-       
         return redirect()->route('events.index');
     }
 
