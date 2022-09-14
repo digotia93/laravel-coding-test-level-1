@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\Api\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,12 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::group(['prefix'=>'v1/events'], function($router){
-    $router->get('/', [EventController::class, 'index'])->name('events.index');
-    $router->get('/create', [EventController::class, 'create'])->name('events.create');
-    $router->get('/active-events', [EventController::class, 'activeEvents'])->name('events.active-events');
-    $router->get('/{id}', [EventController::class, 'show'])->name('events.show');
-    $router->get('/{id}/edit', [EventController::class, 'edit'])->name('events.edit');
-    $router->post('/', [EventController::class, 'store'])->name('events.store');
-    $router->match(['put', 'patch'], '/{id}', [EventController::class, 'update'])->name('events.update');
-    $router->delete('/{id}', [EventController::class, 'destroy'])->name('events.destroy');
+    $router->get('/', [EventController::class, 'index'])->name('api.events.index');
+    $router->post('/', [EventController::class, 'create'])->name('api.events.create');
+    $router->get('/active-events', [EventController::class, 'activeEvents'])->name('api.events.active-events');
+    $router->get('/{id}', [EventController::class, 'show'])->name('api.events.show');
+    $router->match(['put', 'patch'], '/{id}', [EventController::class, 'update'])->name('api.events.update');
+    $router->delete('/{id}', [EventController::class, 'destroy'])->name('api.events.destroy');
 });
