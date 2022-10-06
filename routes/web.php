@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,8 +17,11 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return redirect()->route('events.index');
+    return redirect()->route('question-one');
 });
 
-Route::resource('events', EventController::class);
-Auth::routes();
+Route::get('/question-one', 'HomeController@questionOne')->name('question-one');
+Route::post('/clearOutputNumberCache', 'HomeController@clearOutputNumberCache')->name('clear-output-number-cache');
+Route::post('/question-one', 'HomeController@calculate')->name('calculate');
+Route::get('/question-two', 'HomeController@questionTwo')->name('question-two');
+Route::get('/user-interface', 'HomeController@userInterface')->name('user-interface');

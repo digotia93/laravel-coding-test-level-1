@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="token" content="{{ csrf_token() }}" />
-    <title>Laravel Test 1</title>
+    <title>PHP Technical Test</title>
 
   
 
@@ -52,25 +52,6 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
             </ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    @guest
-                    <a class="nav-link login-btn" href="#" role="button">
-                        Login <i class="fas fa-sign-in-alt"></i>
-                    </a>
-                    <form id="login-form" action="{{ route('login') }}" method="post" class="form-horizontal" role="form">
-                        {{ csrf_field() }}
-                    </form>
-                    @else
-                    <a class="nav-link logout-btn" href="#" role="button">
-                        Logout <i class="fas fa-sign-out-alt"></i>
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="post" class="form-horizontal" role="form">
-                        {{ csrf_field() }}
-                    </form>
-                    @endguest
-                </li>
-            </ul>
         </nav>
         <!-- /.navbar -->
 
@@ -78,31 +59,24 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="#" class="brand-link">
-                <span class="brand-text font-weight-light">Laravel Test 1</span>
+                <span class="brand-text font-weight-light">PHP Technical Test</span>
             </a>
 
             <!-- Sidebar -->
             <div class="sidebar">
-                <!-- Sidebar user panel (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="info">
-                        <a href="#" class="d-block">
-                            @guest
-                            Guest    
-                            @else
-                            {{ Auth::user()->username }}
-                            @endguest
-                        </a>
-                    </div>
-                </div>
-
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item">
-                            <a href="{{ route('events.index') }}" class="nav-link {{ request()->is('api/v1/events') ? 'active' : '' }} {{ request()->is('api/v1/events/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-calendar"></i>
-                                <p>Events</p>
+                            <a href="{{ route('question-one') }}" class="nav-link {{ request()->is('question-one') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-question"></i>
+                                <p>Question One</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('question-two') }}" class="nav-link {{ request()->is('question-two') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-question"></i>
+                                <p>Question Two</p>
                             </a>
                         </li>
                     </ul>

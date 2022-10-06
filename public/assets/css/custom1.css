@@ -1,0 +1,30 @@
+body {
+    background: #000;
+    color: white;
+    font-family: Arial;
+    margin: 0;
+    font-size: 16px;
+}
+
+img {
+    width: 100%;
+    object-fit: cover;    
+}
+
+.top-div {
+    background-color: #c0c0c0;
+    position: fixed;
+    top:0;
+    font-size: 30px;
+    width: 100%;
+    z-index: 100;
+}
+
+.mt-50 {
+    margin-top: 85px;
+}
+
+#friends-section {
+    height: 100vh;
+    overflow: scroll;
+}
